@@ -2,12 +2,12 @@ import { useSprings, animated } from '@react-spring/web';
 import { useEffect, useRef, useState } from 'react';
 
 const SplitText = ({
-  text = 'Hello, Tailwind!',
-  className = '',
-  delay = 100,
-  animationFrom = { opacity: 0, transform: 'translate3d(0,40px,0)' },
-  animationTo = { opacity: 1, transform: 'translate3d(0,0,0)' },
-  easing = 'easeOutCubic',
+  text ,
+  className ,
+  delay ,
+  animationFrom ,
+  animationTo,
+  easing,
   threshold = 0.1,
   rootMargin = '-100px',
   textAlign = 'center',
