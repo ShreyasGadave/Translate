@@ -1,15 +1,20 @@
-import React, { useState } from "react";
-import { MdDelete, MdContentCopy } from "react-icons/md";
+import React, { useState, useEffect } from "react";
+import { MdDelete, MdContentCopy, MdVolumeUp, MdCheck } from "react-icons/md";
 import CountUp from "../../Reactbits/CountUp/CountUp";
 import SplitText from "../../Reactbits/SplitText/SplitText";
 import Aurora from "../../Reactbits/Aurora/Aurora";
 import { MdSwapHoriz } from "react-icons/md";
+import BG from "../assets/BG.png";
+import { MdOutlineDelete } from "react-icons/md";
+import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
+import { MdShare } from "react-icons/md";
 
 const Transa = () => {
   const [inputText, setInputText] = useState("");
   const [translatedText, setTranslatedText] = useState("");
   const [language, setLanguage] = useState("en");
   const [detectedLang, setDetectedLang] = useState("");
+  const [liked, setLiked] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const handleTranslate = async () => {
@@ -36,21 +41,51 @@ const Transa = () => {
     }
   };
 
+  const handleCopy = () => {
+    if (translatedText) {
+      navigator.clipboard.writeText(translatedText).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 3000); // Show ✓ for 3 seconds
+      });
+    }
+  };
+
   const handleClear = () => {
     setInputText("");
     setTranslatedText("");
     setDetectedLang("");
   };
 
-  const handleCopy = () => {
-    if (translatedText) {
-      navigator.clipboard.writeText(translatedText);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    }
+  const handleSpeak = () => {
+    if (!inputText.trim()) return;
+
+    const utterance = new SpeechSynthesisUtterance(inputText);
+    const voices = speechSynthesis.getVoices();
+
+    // Try to select a female voice (this depends on browser support)
+    const femaleVoice = voices.find(
+      (voice) =>
+        voice.name.toLowerCase().includes("female") ||
+        voice.name.toLowerCase().includes("woman") ||
+        voice.name.toLowerCase().includes("google uk english female")
+    );
+
+    // Fallback to first voice if not found
+    utterance.voice = femaleVoice || voices[0];
+    utterance.lang = "en-US";
+    utterance.rate = 1;
+    utterance.pitch = 1.2; // Slightly higher pitch for a more feminine tone
+
+    speechSynthesis.speak(utterance);
   };
 
   const characterCount = inputText.length;
+
+  useEffect(() => {
+    window.speechSynthesis.onvoiceschanged = () => {
+      speechSynthesis.getVoices(); // triggers voice loading
+    };
+  }, []);
 
   return (
     <>
@@ -74,123 +109,176 @@ const Transa = () => {
             Perfect for communication, learning, and global reach.
           </p>
         </div>
+        <div
+          className="w-full max-w-5xl mx-auto text-white rounded-lg shadow-lg pb-4 space-y-4 relative "
+          style={{
+            backgroundImage: `url(${BG})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        >
+          {/* Glassmorphism Overlay */}
+          <div className="absolute inset-0 bg-gray-900/40 backdrop-blur-xl border border-white/20 rounded-lg z-0"></div>
 
-        <div className="w-full max-w-5xl mx-auto bg-gray-900 text-white rounded-lg shadow-lg p-4 space-y-4">
-          {/* Tabs */}
-          <div className="flex gap-4 border-b border-gray-700 pb-2">
-            <button className="text-gray-400 font-semibold">Text</button>
-         
-          </div>
-
-          {/* Language Selectors and Swap */}
-          <div className="flex justify-between items-center gap-4">
-            <div className="flex-1">
-              <select
-                // value={sourceLang}
-                // onChange={(e) => setSourceLang(e.target.value)}
-                className="w-full bg-gray-800 border border-gray-600 rounded-md px-3 py-2 text-white"
-              >
-                <option value="hi">Hindi</option>
-                <option value="en">English</option>
-                <option value="en">English</option>
-                <option value="es">Spanish</option>
-                <option value="fr">French</option>
-                <option value="de">German</option>
-                <option value="hi">Hindi</option>
-                <option value="zh">Chinese</option>
-                {/* Add more */}
-              </select>
+          {/* Content Layer */}
+          <div className="relative z-10 space-y-4 p-4">
+            {/* Tabs */}
+            <div className="flex gap-4 border-b border-gray-700 pb-2">
+              <button className="text-gray-300 font-semibold">Text</button>
             </div>
 
-            <button
-              // onClick={swapLanguages}
-              className="text-gray-400 hover:text-white"
-              title="Swap Languages"
-            >
-              <MdSwapHoriz size={28} />
-            </button>
+            {/* Language Selectors and Swap */}
+            <div className="flex justify-between rounded-md px-3 py-2 bg-white/10 backdrop-blur-md border border-white/20 items-center gap-4">
+              <div className="flex-1">
+                <span className="w-full font-normal bg-transparent text-white">
+                  Detect Language
+                </span>
+              </div>
 
-            <div className="flex-1">
-              <select
-                value={language}
-                onChange={(e) => setLanguage(e.target.value)}
-                className="w-full bg-gray-800 border border-gray-600 rounded-md px-3 py-2 text-white"
+              <button
+                className="text-gray-300 hover:text-white"
+                title="Swap Languages"
               >
-                <option value="en">English</option>
-                <option value="hi">Hindi</option>
-                <option value="en">English</option>
-                <option value="es">Spanish</option>
-                <option value="fr">French</option>
-                <option value="de">German</option>
-                <option value="hi">Hindi</option>
-                <option value="zh">Chinese</option>
-                {/* Add more */}
-              </select>
-            </div>
-          </div>
-
-          {/* Text Areas */}
-          <div className="flex flex-col md:flex-row gap-4">
-            {/* Input Box */}
-            <div className="relative w-full bg-gray-800 md:w-1/2 p-3">
-              <textarea
-                className="w-full h-60  text-white p-1 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter text..."
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-              />
-             
-              <div className="text-right flex justify-end items-center gap-2 text-sm text-gray-400 mt-1">
-                 <button
-                onClick={handleClear}
-                className="top-3 text-gray-500 hover:text-red-600"
-                title="Clear"
-              >
-                <MdDelete size={25} />
+                <MdSwapHoriz size={28} />
               </button>
-                {characterCount} / <CountUp />
+
+              <div className="flex-1">
+                <select
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value)}
+                  className="w-full font-normal bg-transparent text-white focus:outline-none focus:ring-0"
+                >
+                  <option value="en">English</option>
+                  <option value="hi">Hindi</option>
+                  <option value="es">Spanish</option>
+                  <option value="fr">French</option>
+                  <option value="de">German</option>
+                  <option value="zh">Chinese</option>
+                </select>
               </div>
             </div>
 
-            {/* Output Box */}
-            <div className="relative w-full md:w-1/2 bg-gray-800 rounded-lg p-4">
-              <h3 className="text-lg font-semibold mb-2">Translation:</h3>
-              <p className="text-gray-100 whitespace-pre-wrap h-40 overflow-auto">
-                {translatedText || (
-                  <span className="text-gray-500">
-                    Translation will appear here...
-                  </span>
-                )}
-              </p>
+            {/* Text Areas */}
+            <div className="flex flex-col md:flex-row gap-2">
+              {/* Input Box */}
+              <div className="relative w-full rounded-md bg-white/10 backdrop-blur-md border border-white/20 md:w-1/2 p-3">
+                {/* Top-right icon actions */}
+                <div className="absolute top-3 right-3 flex gap-3">
+                  {/* Speak Icon - Blue */}
+                  <button
+                    onClick={handleSpeak}
+                    className="text-blue-400 hover:text-blue-600 transition-colors"
+                    title="Speak"
+                  >
+                    <MdVolumeUp size={22} />
+                  </button>
 
-              {detectedLang && (
-                <p className="text-sm text-gray-400 mt-2">
-                  Detected Language:{" "}
-                  <span className="font-medium">{detectedLang}</span>
+                  {/* Clear Icon - Red */}
+                  <button
+                    onClick={handleClear}
+                    className="text-red-400 hover:text-red-600 transition-colors"
+                    title="Clear"
+                  >
+                    <MdOutlineDelete size={22} />
+                  </button>
+                </div>
+
+                {/* Textarea */}
+                <textarea
+                  className="w-full h-60 text-white bg-transparent p-1 resize-none focus:outline-none focus:ring-0"
+                  placeholder="Enter text..."
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                />
+
+                {/* Character Count */}
+                <div className="text-right text-sm text-gray-300 mt-1">
+                  {characterCount} / 5,000
+                </div>
+              </div>
+
+              {/* Output Box */}
+              <div className="relative w-full md:w-1/2 bg-white/10 backdrop-blur-md border border-white/20 rounded-md p-4">
+                <div className="flex justify-between items-center mb-2">
+                  <div className="absolute top-3 right-3 flex gap-3">
+                    <button
+                      onClick={() => setLiked(!liked)}
+                      className={`transition-colors ${
+                        liked
+                          ? "text-red-500"
+                          : "text-pink-400 hover:text-pink-600"
+                      }`}
+                      title="Like"
+                    >
+                      {liked ? (
+                        <MdFavorite size={22} />
+                      ) : (
+                        <MdFavoriteBorder size={22} />
+                      )}
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        if (!translatedText) return;
+
+                        if (navigator.share) {
+                          navigator
+                            .share({
+                              text: translatedText,
+                              title: "Shared Translation",
+                            })
+                            .catch((error) =>
+                              console.error("Share failed:", error)
+                            );
+                        } else {
+                          alert("Sharing is not supported on this device.");
+                        }
+                      }}
+                      className="text-green-400 hover:text-green-600 transition-colors"
+                      title="Share"
+                    >
+                      <MdShare size={22} />
+                    </button>
+
+                    <button
+                      onClick={handleCopy}
+                      className={`text-blue-400 hover:text-blue-600 transition-colors`}
+                      title="Copy"
+                    >
+                      {copied ? (
+                        <MdCheck size={22} />
+                      ) : (
+                        <MdContentCopy size={22} />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                <p className="text-gray-100 whitespace-pre-wrap h-40 overflow-auto">
+                  {translatedText || (
+                    <span className="text-gray-400">
+                      Translation will appear here...
+                    </span>
+                  )}
                 </p>
-              )}
-
-              {translatedText && (
-                <button
-                  onClick={handleCopy}
-                  className="absolute top-4 right-4 text-blue-400 hover:text-blue-600"
-                  title="Copy"
-                >
-                  <MdContentCopy size={20} />
-                </button>
-              )}
-              {copied && <p className="text-green-500 mt-2 text-sm">Copied!</p>}
+              </div>
             </div>
-          </div>
 
-          {/* Translate Button */}
-          <div className="flex justify-end">
-            <button
-              onClick={handleTranslate}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md"
-            >
-              Translate
-            </button>
+            {/* Translate Button */}
+            <div className="flex justify-end">
+             <div className="p-[2px] rounded-md  inline-block">
+<div className="p-[2px] rounded-md bg-gradient-to-r from-[#00d8ff] via-[#7cff67] to-[#00d8ff] inline-block">
+  <button
+    onClick={handleTranslate}
+    className="bg-black text-gray-300 px-6 py-2 rounded-md w-full h-full"
+  >
+    Translate
+  </button>
+</div>
+
+</div>
+
+            </div>
           </div>
         </div>
       </div>

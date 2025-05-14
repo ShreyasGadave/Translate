@@ -3,7 +3,7 @@ import LOGO from "../assets/LOGO!.svg";
 
 const Navbar = () => {
   return (
-    <nav className="bg-black flex justify-between items-center px-6 py-2 p-2 shadow-md">
+    <nav className="bg-black opacity-90 flex justify-between items-center px-6 py-2 p-2 shadow-md">
       {/* Logo and Brand */}
       <div className="flex items-center gap-2">
         <img src={LOGO} alt="AlphaTranslate Logo" className="h-8" />
