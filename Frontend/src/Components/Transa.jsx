@@ -257,7 +257,7 @@ const Transa = () => {
                   onChange={(e) => setInputText(e.target.value)}
                 />
                 <div className="text-right text-sm text-gray-300 mt-1">
-                  {characterCount} / 5,000
+                  {characterCount} / <CountUp/>
                 </div>
               </div>
 
