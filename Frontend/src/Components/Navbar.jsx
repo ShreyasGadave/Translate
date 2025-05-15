@@ -11,7 +11,7 @@ const Navbar = () => {
       </div>
 
       {/* Navigation Links */}
-      <ul className="flex gap-6 text-md font-extralight text-gray-200">
+      <ul className=" gap-6 text-md font-extralight hidden sm:flex text-gray-200">
         <li className="hover:text-blue-600 cursor-pointer">Home</li>
         <li className="hover:text-blue-600 cursor-pointer">About</li>
         <li className="hover:text-blue-600 cursor-pointer">Contact</li>

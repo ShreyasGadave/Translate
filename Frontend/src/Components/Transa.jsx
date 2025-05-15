@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { MdDelete, MdContentCopy, MdVolumeUp, MdCheck } from "react-icons/md";
 import CountUp from "../../Reactbits/CountUp/CountUp";
 import SplitText from "../../Reactbits/SplitText/SplitText";
 import Aurora from "../../Reactbits/Aurora/Aurora";
 import { MdSwapHoriz } from "react-icons/md";
 import BG from "../assets/BG.png";
-import { MdOutlineDelete } from "react-icons/md";
+import LANG from "../assets/Lang.svg";
+import { MdOutlineDelete, MdKeyboardVoice } from "react-icons/md";
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 import { MdShare } from "react-icons/md";
+import GradientText from "../../Reactbits/GradientText/GradientText";
 
 const Transa = () => {
   const [inputText, setInputText] = useState("");
@@ -16,30 +18,64 @@ const Transa = () => {
   const [detectedLang, setDetectedLang] = useState("");
   const [liked, setLiked] = useState(false);
   const [copied, setCopied] = useState(false);
+  const recognitionRef = useRef(null);
+
+  // const handleTranslate = async () => {
+  //   try {
+  //     const response = await fetch("http://localhost:8080/api/translate", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         text: inputText,
+  //         targetLanguage: language,
+  //       }),
+  //     });
+      
+  //     const data = await response.json();
+  //     setTranslatedText(data.translatedText || "Translation failed");
+  //     if (data.detectedLang) {
+  //       setDetectedLang(data.detectedLang);
+  //     }
+  //   } catch (error) {
+  //     console.error("Translation error:", error);
+  //     setTranslatedText(`Error: ${error.message}`);
+  //   }
+  // };
+
 
   const handleTranslate = async () => {
-    try {
-      const response = await fetch("http://localhost:8080/api/translate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          text: inputText,
-          targetLanguage: language,
-        }),
-      });
+  try {
+    const payload = {
+      text: inputText,
+      targetLanguage: language,
+    };
+    console.log("Body:", JSON.stringify(payload, null, 2));
 
-      const data = await response.json();
-      setTranslatedText(data.translatedText || "Translation failed");
-      if (data.detectedLang) {
-        setDetectedLang(data.detectedLang);
-      }
-    } catch (error) {
-      console.error("Translation error:", error);
-      setTranslatedText(`Error: ${error.message}`);
+    const response = await fetch("http://localhost:8080/api/translate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    console.log("Response object:", response);
+
+    const data = await response.json();
+    console.log("Response JSON data:", data);
+
+    setTranslatedText(data.translatedText || "Translation failed");
+    if (data.detectedLang) {
+      setDetectedLang(data.detectedLang);
     }
-  };
+  } catch (error) {
+    console.error("Translation error:", error);
+    setTranslatedText(`Error: ${error.message}`);
+  }
+};
+
 
   const handleCopy = () => {
     if (translatedText) {
@@ -48,6 +84,29 @@ const Transa = () => {
         setTimeout(() => setCopied(false), 3000); // Show ✓ for 3 seconds
       });
     }
+  };
+
+  const handleMicInput = () => {
+    if (!("webkitSpeechRecognition" in window)) {
+      alert("Speech recognition not supported in this browser.");
+      return;
+    }
+
+    const recognition = new window.webkitSpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = "en-US";
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setInputText((prev) => prev + " " + transcript);
+    };
+
+    recognition.onerror = (event) => {
+      console.error("Speech recognition error:", event.error);
+    };
+
+    recognition.start();
   };
 
   const handleClear = () => {
@@ -89,10 +148,10 @@ const Transa = () => {
 
   return (
     <>
-      <div className="bg-black flex flex-col items-center justify-center ">
+      <div className="flex flex-col items-center justify-center ">
         <Aurora />
         {/* Headline Section */}
-        <div className="w-full flex flex-col max-w-3xl text-center mb-6 -mt-10">
+        <div className="w-full flex flex-col max-w-3xl text-center mb-6 -mt-20">
           {/* <SplitText text={AlphaTranslate} className="" /> */}
           <SplitText
             text="AlphaTranslate"
@@ -110,27 +169,25 @@ const Transa = () => {
           </p>
         </div>
         <div
-          className="w-full max-w-5xl mx-auto text-white rounded-lg shadow-lg pb-4 space-y-4 relative "
+          className="w-full max-w-5xl mx-auto text-white rounded-lg shadow-lg pb-4  relative "
           style={{
             backgroundImage: `url(${BG})`,
-            backgroundSize: "cover",
+
             backgroundPosition: "center",
           }}
         >
-          {/* Glassmorphism Overlay */}
+
           <div className="absolute inset-0 bg-gray-900/40 backdrop-blur-xl border border-white/20 rounded-lg z-0"></div>
 
-          {/* Content Layer */}
           <div className="relative z-10 space-y-4 p-4">
-            {/* Tabs */}
+            <div className=" absolute right-0 -top-12 opacity-80 hover:scale-105 transition-all ease-in"><img src={LANG} alt="" /></div>
             <div className="flex gap-4 border-b border-gray-700 pb-2">
               <button className="text-gray-300 font-semibold">Text</button>
             </div>
 
-            {/* Language Selectors and Swap */}
             <div className="flex justify-between rounded-md px-3 py-2 bg-white/10 backdrop-blur-md border border-white/20 items-center gap-4">
               <div className="flex-1">
-                <span className="w-full font-normal bg-transparent text-white">
+                <span className="w-full font-extralight bg-transparent text-white">
                   Detect Language
                 </span>
               </div>
@@ -146,7 +203,7 @@ const Transa = () => {
                 <select
                   value={language}
                   onChange={(e) => setLanguage(e.target.value)}
-                  className="w-full font-normal bg-transparent text-white focus:outline-none focus:ring-0"
+                  className="w-full font-extralight bg-transparent text-white focus:outline-none focus:ring-0"
                 >
                   <option value="en">English</option>
                   <option value="hi">Hindi</option>
@@ -159,11 +216,12 @@ const Transa = () => {
             </div>
 
             {/* Text Areas */}
-            <div className="flex flex-col md:flex-row gap-2">
+            <div className="flex flex-col mt-7 md:flex-row gap-1">
               {/* Input Box */}
-              <div className="relative w-full rounded-md bg-white/10 backdrop-blur-md border border-white/20 md:w-1/2 p-3">
+              <div className="relative w-full rounded-l-md bg-white/10 backdrop-blur-md border border-white/20 md:w-1/2 p-2">
                 {/* Top-right icon actions */}
-                <div className="absolute top-3 right-3 flex gap-3">
+                {/* Top-right icon actions */}
+                <div className="absolute -top-5 right-0 flex gap-3 bg-gradient-to-b from-black/80 to-transparent px-4 py-2 rounded-full hover:scale-104 transition-all ease-in">
                   {/* Speak Icon - Blue */}
                   <button
                     onClick={handleSpeak}
@@ -171,6 +229,15 @@ const Transa = () => {
                     title="Speak"
                   >
                     <MdVolumeUp size={22} />
+                  </button>
+
+                  {/* Mic Icon - Green */}
+                  <button
+                    onClick={handleMicInput}
+                    className="text-green-400 hover:text-green-600 transition-colors"
+                    title="Mic Input"
+                  >
+                    <MdKeyboardVoice size={22} />
                   </button>
 
                   {/* Clear Icon - Red */}
@@ -185,22 +252,20 @@ const Transa = () => {
 
                 {/* Textarea */}
                 <textarea
-                  className="w-full h-60 text-white bg-transparent p-1 resize-none focus:outline-none focus:ring-0"
+                  className="w-full h-60 text-white bg-transparent resize-none focus:outline-none focus:ring-0"
                   placeholder="Enter text..."
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                 />
-
-                {/* Character Count */}
                 <div className="text-right text-sm text-gray-300 mt-1">
                   {characterCount} / 5,000
                 </div>
               </div>
 
               {/* Output Box */}
-              <div className="relative w-full md:w-1/2 bg-white/10 backdrop-blur-md border border-white/20 rounded-md p-4">
-                <div className="flex justify-between items-center mb-2">
-                  <div className="absolute top-3 right-3 flex gap-3">
+              <div className="relative w-full md:w-1/2 bg-white/10 backdrop-blur-md border border-white/20 rounded-r-md p-2">
+                <div className="flex justify-between items-center">
+                  <div className="absolute -top-5 right-0 flex gap-3 bg-gradient-to-b from-black/80 to-transparent px-4 py-2 rounded-full hover:scale-104 transition-all ease-in">
                     <button
                       onClick={() => setLiked(!liked)}
                       className={`transition-colors ${
@@ -254,7 +319,7 @@ const Transa = () => {
                   </div>
                 </div>
 
-                <p className="text-gray-100 whitespace-pre-wrap h-40 overflow-auto">
+                <p className="text-gray-100 whitespace-pre-wrap h-full overflow-auto">
                   {translatedText || (
                     <span className="text-gray-400">
                       Translation will appear here...
@@ -266,18 +331,22 @@ const Transa = () => {
 
             {/* Translate Button */}
             <div className="flex justify-end">
-             <div className="p-[2px] rounded-md  inline-block">
-<div className="p-[2px] rounded-md bg-gradient-to-r from-[#00d8ff] via-[#7cff67] to-[#00d8ff] inline-block">
-  <button
-    onClick={handleTranslate}
-    className="bg-black text-gray-300 px-6 py-2 rounded-md w-full h-full"
-  >
-    Translate
-  </button>
-</div>
-
-</div>
-
+              <button onClick={handleTranslate}>
+                <GradientText
+                  colors={[
+                    "#40ffaa",
+                    "#4079ff",
+                    "#40ffaa",
+                    "#4079ff",
+                    "#40ffaa",
+                  ]}
+                  animationSpeed={3}
+                  showBorder={true}
+                  className="custom-class px-4 py-2"
+                >
+                  Translate
+                </GradientText>
+              </button>
             </div>
           </div>
         </div>
