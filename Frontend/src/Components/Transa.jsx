@@ -167,7 +167,7 @@ const Transa = () => {
           </p>
         </div>
         <div
-          className="w-full max-w-5xl mt-10 sm:mt-0 mx-auto text-white rounded-lg shadow-lg pb-4  relative "
+          className="w-full m-2 max-w-5xl mt-10 sm:mt-0 mx-auto text-white rounded-lg shadow-lg pb-4  relative "
           style={{
             backgroundImage: `url(${BG})`,
 
@@ -177,7 +177,7 @@ const Transa = () => {
           <div className="absolute inset-0 bg-gray-900/40 backdrop-blur-xl border border-white/20 rounded-lg z-0"></div>
 
           <div className="relative z-10 space-y-4 p-4">
-            <div className=" absolute right-0 -top-12 opacity-80 hover:scale-105 transition-all ease-in">
+            <div className=" absolute right-2 -top-12 opacity-80 hover:scale-105 transition-all ease-in">
               <img src={LANG} alt="" className="h-18 sm:h-full " />
             </div>
             <div className="flex gap-4 border-b border-gray-700 pb-2">
