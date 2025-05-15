@@ -161,8 +161,7 @@ const Transa = () => {
           />
           <p className="text-gray-400">
             Easily translate text from any language to your desired language in
-            seconds. Our smart translator detects the source language
-            automatically and provides accurate translations using advanced AI.
+            seconds.
             Perfect for communication, learning, and global reach.
           </p>
         </div>
