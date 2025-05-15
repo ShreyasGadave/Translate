@@ -262,7 +262,7 @@ const Transa = () => {
               </div>
 
               {/* Output Box */}
-              <div className="relative w-full mt-7 sm:mt-0  md:w-1/2 bg-white/10 backdrop-blur-md border border-white/20 rounded-r-md p-2">
+              <div className="relative w-full mt-7 md:mt-0  md:w-1/2 bg-white/10 backdrop-blur-md border border-white/20 rounded-r-md p-2">
                 <div className="flex justify-between items-center">
                   <div className="absolute -top-5 right-0 flex gap-3 bg-gradient-to-b from-black/80 to-transparent px-4 py-2 rounded-full hover:scale-104 transition-all ease-in">
                     <button
