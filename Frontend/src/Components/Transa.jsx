@@ -32,7 +32,7 @@ const Transa = () => {
   //         targetLanguage: language,
   //       }),
   //     });
-      
+
   //     const data = await response.json();
   //     setTranslatedText(data.translatedText || "Translation failed");
   //     if (data.detectedLang) {
@@ -44,38 +44,36 @@ const Transa = () => {
   //   }
   // };
 
-
   const handleTranslate = async () => {
-  try {
-    const payload = {
-      text: inputText,
-      targetLanguage: language,
-    };
-    console.log("Body:", JSON.stringify(payload, null, 2));
+    try {
+      const payload = {
+        text: inputText,
+        targetLanguage: language,
+      };
+      console.log("Body:", JSON.stringify(payload, null, 2));
 
-    const response = await fetch("http://localhost:8080/api/translate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
+      const response = await fetch("http://localhost:8080/api/translate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
 
-    console.log("Response object:", response);
+      console.log("Response object:", response);
 
-    const data = await response.json();
-    console.log("Response JSON data:", data);
+      const data = await response.json();
+      console.log("Response JSON data:", data);
 
-    setTranslatedText(data.translatedText || "Translation failed");
-    if (data.detectedLang) {
-      setDetectedLang(data.detectedLang);
+      setTranslatedText(data.translatedText || "Translation failed");
+      if (data.detectedLang) {
+        setDetectedLang(data.detectedLang);
+      }
+    } catch (error) {
+      console.error("Translation error:", error);
+      setTranslatedText(`Error: ${error.message}`);
     }
-  } catch (error) {
-    console.error("Translation error:", error);
-    setTranslatedText(`Error: ${error.message}`);
-  }
-};
-
+  };
 
   const handleCopy = () => {
     if (translatedText) {
@@ -169,18 +167,19 @@ const Transa = () => {
           </p>
         </div>
         <div
-          className="w-full max-w-5xl mx-auto text-white rounded-lg shadow-lg pb-4  relative "
+          className="w-full max-w-5xl mt-10 sm:mt-0 mx-auto text-white rounded-lg shadow-lg pb-4  relative "
           style={{
             backgroundImage: `url(${BG})`,
 
             backgroundPosition: "center",
           }}
         >
-
           <div className="absolute inset-0 bg-gray-900/40 backdrop-blur-xl border border-white/20 rounded-lg z-0"></div>
 
           <div className="relative z-10 space-y-4 p-4">
-            <div className=" absolute right-0 -top-12 opacity-80 hover:scale-105 transition-all ease-in"><img src={LANG} alt="" /></div>
+            <div className=" absolute right-0 -top-12 opacity-80 hover:scale-105 transition-all ease-in">
+              <img src={LANG} alt="" className="h-18 sm:h-full " />
+            </div>
             <div className="flex gap-4 border-b border-gray-700 pb-2">
               <button className="text-gray-300 font-semibold">Text</button>
             </div>
@@ -263,7 +262,7 @@ const Transa = () => {
               </div>
 
               {/* Output Box */}
-              <div className="relative w-full md:w-1/2 bg-white/10 backdrop-blur-md border border-white/20 rounded-r-md p-2">
+              <div className="relative w-full mt-7 sm:mt-0  md:w-1/2 bg-white/10 backdrop-blur-md border border-white/20 rounded-r-md p-2">
                 <div className="flex justify-between items-center">
                   <div className="absolute -top-5 right-0 flex gap-3 bg-gradient-to-b from-black/80 to-transparent px-4 py-2 rounded-full hover:scale-104 transition-all ease-in">
                     <button
