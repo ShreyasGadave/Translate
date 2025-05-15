@@ -18,7 +18,9 @@ const Transa = () => {
   const [detectedLang, setDetectedLang] = useState("");
   const [liked, setLiked] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [inputcopied, setInputCopied] = useState(false);
   const recognitionRef = useRef(null);
+  const textRef = useRef(null);
 
   // const handleTranslate = async () => {
   //   try {
@@ -84,6 +86,15 @@ const Transa = () => {
     }
   };
 
+  const handleCopyInput = () => {
+    if (textRef.current) {
+      textRef.current.select();
+      navigator.clipboard.writeText(textRef.current.value).then(() => {
+        setInputCopied(true);
+        setTimeout(() => setInputCopied(false), 3000);
+      });
+    }
+  };
   const handleMicInput = () => {
     if (!("webkitSpeechRecognition" in window)) {
       alert("Speech recognition not supported in this browser.");
@@ -136,6 +147,29 @@ const Transa = () => {
     speechSynthesis.speak(utterance);
   };
 
+  const handleSpeakOut = () => {
+    if (!translatedText.trim()) return;
+
+    const utterance = new SpeechSynthesisUtterance(translatedText);
+    const voices = speechSynthesis.getVoices();
+
+    // Try to select a female voice (this depends on browser support)
+    const femaleVoice = voices.find(
+      (voice) =>
+        voice.name.toLowerCase().includes("female") ||
+        voice.name.toLowerCase().includes("woman") ||
+        voice.name.toLowerCase().includes("google uk english female")
+    );
+
+    // Fallback to first voice if not found
+    utterance.voice = femaleVoice || voices[0];
+    utterance.lang = "en-US";
+    utterance.rate = 1;
+    utterance.pitch = 1.2; // Slightly higher pitch for a more feminine tone
+
+    speechSynthesis.speak(utterance);
+  };
+
   const characterCount = inputText.length;
 
   useEffect(() => {
@@ -161,8 +195,7 @@ const Transa = () => {
           />
           <p className="text-gray-400">
             Easily translate text from any language to your desired language in
-            seconds.
-            Perfect for communication, learning, and global reach.
+            seconds. Perfect for communication, learning, and global reach.
           </p>
         </div>
         <div
@@ -203,12 +236,94 @@ const Transa = () => {
                   onChange={(e) => setLanguage(e.target.value)}
                   className="w-full font-extralight bg-transparent text-white focus:outline-none focus:ring-0"
                 >
-                  <option value="en">English</option>
-                  <option value="hi">Hindi</option>
-                  <option value="es">Spanish</option>
-                  <option value="fr">French</option>
+                  <option value="af">Afrikaans</option>
+                  <option value="am">Amharic</option>
+                  <option value="ar">Arabic</option>
+                  <option value="az">Azerbaijani</option>
+                  <option value="be">Belarusian</option>
+                  <option value="bg">Bulgarian</option>
+                  <option value="bn">Bengali</option>
+                  <option value="bs">Bosnian</option>
+                  <option value="ca">Catalan</option>
+                  <option value="ceb">Cebuano</option>
+                  <option value="cs">Czech</option>
+                  <option value="cy">Welsh</option>
+                  <option value="da">Danish</option>
                   <option value="de">German</option>
+                  <option value="el">Greek</option>
+                  <option value="en">English</option>
+                  <option value="eo">Esperanto</option>
+                  <option value="es">Spanish</option>
+                  <option value="et">Estonian</option>
+                  <option value="eu">Basque</option>
+                  <option value="fa">Persian</option>
+                  <option value="fi">Finnish</option>
+                  <option value="fr">French</option>
+                  <option value="ga">Irish</option>
+                  <option value="gl">Galician</option>
+                  <option value="gu">Gujarati</option>
+                  <option value="ha">Hausa</option>
+                  <option value="hi">Hindi</option>
+                  <option value="hmn">Hmong</option>
+                  <option value="hr">Croatian</option>
+                  <option value="ht">Haitian Creole</option>
+                  <option value="hu">Hungarian</option>
+                  <option value="hy">Armenian</option>
+                  <option value="id">Indonesian</option>
+                  <option value="ig">Igbo</option>
+                  <option value="is">Icelandic</option>
+                  <option value="it">Italian</option>
+                  <option value="iw">Hebrew</option>
+                  <option value="ja">Japanese</option>
+                  <option value="jw">Javanese</option>
+                  <option value="ka">Georgian</option>
+                  <option value="kk">Kazakh</option>
+                  <option value="km">Khmer</option>
+                  <option value="kn">Kannada</option>
+                  <option value="ko">Korean</option>
+                  <option value="la">Latin</option>
+                  <option value="lo">Lao</option>
+                  <option value="lt">Lithuanian</option>
+                  <option value="lv">Latvian</option>
+                  <option value="mg">Malagasy</option>
+                  <option value="mi">Maori</option>
+                  <option value="mk">Macedonian</option>
+                  <option value="ml">Malayalam</option>
+                  <option value="mn">Mongolian</option>
+                  <option value="mr">Marathi</option>
+                  <option value="ms">Malay</option>
+                  <option value="mt">Maltese</option>
+                  <option value="my">Myanmar (Burmese)</option>
+                  <option value="ne">Nepali</option>
+                  <option value="nl">Dutch</option>
+                  <option value="no">Norwegian</option>
+                  <option value="pa">Punjabi</option>
+                  <option value="pl">Polish</option>
+                  <option value="pt">Portuguese</option>
+                  <option value="ro">Romanian</option>
+                  <option value="ru">Russian</option>
+                  <option value="si">Sinhala</option>
+                  <option value="sk">Slovak</option>
+                  <option value="sl">Slovenian</option>
+                  <option value="so">Somali</option>
+                  <option value="sq">Albanian</option>
+                  <option value="sr">Serbian</option>
+                  <option value="su">Sundanese</option>
+                  <option value="sv">Swedish</option>
+                  <option value="sw">Swahili</option>
+                  <option value="ta">Tamil</option>
+                  <option value="te">Telugu</option>
+                  <option value="th">Thai</option>
+                  <option value="tr">Turkish</option>
+                  <option value="uk">Ukrainian</option>
+                  <option value="ur">Urdu</option>
+                  <option value="uz">Uzbek</option>
+                  <option value="vi">Vietnamese</option>
+                  <option value="xh">Xhosa</option>
+                  <option value="yi">Yiddish</option>
+                  <option value="yo">Yoruba</option>
                   <option value="zh">Chinese</option>
+                  <option value="zu">Zulu</option>
                 </select>
               </div>
             </div>
@@ -238,6 +353,18 @@ const Transa = () => {
                     <MdKeyboardVoice size={22} />
                   </button>
 
+                  <button
+                    onClick={handleCopyInput}
+                    className={`text-blue-400 hover:text-blue-600 transition-colors`}
+                    title="Copy"
+                  >
+                    {inputcopied ? (
+                      <MdCheck size={22} />
+                    ) : (
+                      <MdContentCopy size={22} />
+                    )}
+                  </button>
+
                   {/* Clear Icon - Red */}
                   <button
                     onClick={handleClear}
@@ -250,13 +377,14 @@ const Transa = () => {
 
                 {/* Textarea */}
                 <textarea
+                  ref={textRef}
                   className="w-full h-60 text-white bg-transparent resize-none focus:outline-none focus:ring-0"
                   placeholder="Enter text..."
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                 />
                 <div className="text-right text-sm text-gray-300 mt-1">
-                  {characterCount} / <CountUp/>
+                  {characterCount} / <CountUp />
                 </div>
               </div>
 
@@ -278,6 +406,14 @@ const Transa = () => {
                       ) : (
                         <MdFavoriteBorder size={22} />
                       )}
+                    </button>
+
+                    <button
+                      onClick={handleSpeakOut}
+                      className="text-blue-400 hover:text-blue-600 transition-colors"
+                      title="Speak"
+                    >
+                      <MdVolumeUp size={22} />
                     </button>
 
                     <button
