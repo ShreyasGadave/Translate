@@ -230,7 +230,7 @@ const Transa = () => {
                 <MdSwapHoriz size={28} />
               </button>
 
-              <div className="flex-1">
+              {/* <div className="flex-1">
                 <select
                   value={language}
                   onChange={(e) => setLanguage(e.target.value)}
@@ -325,6 +325,107 @@ const Transa = () => {
                   <option value="zh">Chinese</option>
                   <option value="zu">Zulu</option>
                 </select>
+              </div> */}
+
+              <div className="flex-1 relative w-full max-w-md">
+                <select
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value)}
+                  className="w-full text-white font-light focus:outline-none focus:ring-0"
+                >
+                  {/* Map this later for flag support */}
+                  <option value="af">Afrikaans</option>
+                  <option value="am">Amharic</option>
+                  <option value="ar">Arabic</option>
+                  <option value="az">Azerbaijani</option>
+                  <option value="be">Belarusian</option>
+                  <option value="bg">Bulgarian</option>
+                  <option value="bn">Bengali</option>
+                  <option value="bs">Bosnian</option>
+                  <option value="ca">Catalan</option>
+                  <option value="ceb">Cebuano</option>
+                  <option value="cs">Czech</option>
+                  <option value="cy">Welsh</option>
+                  <option value="da">Danish</option>
+                  <option value="de">German</option>
+                  <option value="el">Greek</option>
+                  <option value="en">English</option>
+                  <option value="eo">Esperanto</option>
+                  <option value="es">Spanish</option>
+                  <option value="et">Estonian</option>
+                  <option value="eu">Basque</option>
+                  <option value="fa">Persian</option>
+                  <option value="fi">Finnish</option>
+                  <option value="fr">French</option>
+                  <option value="ga">Irish</option>
+                  <option value="gl">Galician</option>
+                  <option value="gu">Gujarati</option>
+                  <option value="ha">Hausa</option>
+                  <option value="hi">Hindi</option>
+                  <option value="hmn">Hmong</option>
+                  <option value="hr">Croatian</option>
+                  <option value="ht">Haitian Creole</option>
+                  <option value="hu">Hungarian</option>
+                  <option value="hy">Armenian</option>
+                  <option value="id">Indonesian</option>
+                  <option value="ig">Igbo</option>
+                  <option value="is">Icelandic</option>
+                  <option value="it">Italian</option>
+                  <option value="iw">Hebrew</option>
+                  <option value="ja">Japanese</option>
+                  <option value="jw">Javanese</option>
+                  <option value="ka">Georgian</option>
+                  <option value="kk">Kazakh</option>
+                  <option value="km">Khmer</option>
+                  <option value="kn">Kannada</option>
+                  <option value="ko">Korean</option>
+                  <option value="la">Latin</option>
+                  <option value="lo">Lao</option>
+                  <option value="lt">Lithuanian</option>
+                  <option value="lv">Latvian</option>
+                  <option value="mg">Malagasy</option>
+                  <option value="mi">Maori</option>
+                  <option value="mk">Macedonian</option>
+                  <option value="ml">Malayalam</option>
+                  <option value="mn">Mongolian</option>
+                  <option value="mr">Marathi</option>
+                  <option value="ms">Malay</option>
+                  <option value="mt">Maltese</option>
+                  <option value="my">Myanmar (Burmese)</option>
+                  <option value="ne">Nepali</option>
+                  <option value="nl">Dutch</option>
+                  <option value="no">Norwegian</option>
+                  <option value="pa">Punjabi</option>
+                  <option value="pl">Polish</option>
+                  <option value="pt">Portuguese</option>
+                  <option value="ro">Romanian</option>
+                  <option value="ru">Russian</option>
+                  <option value="si">Sinhala</option>
+                  <option value="sk">Slovak</option>
+                  <option value="sl">Slovenian</option>
+                  <option value="so">Somali</option>
+                  <option value="sq">Albanian</option>
+                  <option value="sr">Serbian</option>
+                  <option value="su">Sundanese</option>
+                  <option value="sv">Swedish</option>
+                  <option value="sw">Swahili</option>
+                  <option value="ta">Tamil</option>
+                  <option value="te">Telugu</option>
+                  <option value="th">Thai</option>
+                  <option value="tr">Turkish</option>
+                  <option value="uk">Ukrainian</option>
+                  <option value="ur">Urdu</option>
+                  <option value="uz">Uzbek</option>
+                  <option value="vi">Vietnamese</option>
+                  <option value="xh">Xhosa</option>
+                  <option value="yi">Yiddish</option>
+                  <option value="yo">Yoruba</option>
+                  <option value="zh">Chinese</option>
+                  <option value="zu">Zulu</option>
+                  {/* ... rest of your options */}
+                </select>
+                {/* Optional dropdown icon */}
+
               </div>
             </div>
 
